@@ -24,6 +24,20 @@
 
 ;;; Code:
 
+(defmacro defkey (key def &optional keymap)
+  "Assign DEF to KEY in KEYMAP.
+KEYMAP defaults to `global-map'."
+  (let ((key-string
+         (if (symbolp key)
+             (symbol-name `,key)
+           (mapconcat #'symbol-name key " "))))
+  `(define-key
+     ,(if keymap keymap 'global-map)
+     (kbd ,key-string)
+     ,(cond
+       ((symbolp def) `',def)
+       ((null def) nil)
+       (t `(lambda () (interactive) ,def))))))
 
 
 (provide 'defkey)

@@ -65,6 +65,12 @@
     (define-key some-map (kbd "H-z s-y M-x C-w")
       (lambda nil (interactive) (some-func 0 1 -1 t nil)))))
 
+;; helpers
+
+(ert-deftest defkey--test-partition-pairs ()
+  (should (equal (defkey--partition-pairs '(a 1 b 2 c 3)) '((a 1) (b 2) (c 3))))
+  (should (equal (defkey--partition-pairs '(a 1 b 2 c 3 d)) '((a 1) (b 2) (c 3)))))
+
 
 (provide 'defkey-tests)
 ;;; defkey-tests.el ends here

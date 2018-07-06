@@ -39,6 +39,18 @@ KEYMAP defaults to `global-map'."
        ((null def) nil)
        (t `(lambda () (interactive) ,def))))))
 
+;; helpers
+
+(defun defkey--partition-pairs (args)
+  "Return a list of pairs of ARGS, ignorning danglers.
+Ex: (a 1 b 2 c 3) => ((a 1) (b 2) (c 3))."
+  (let (result)
+    (while (> (length args) 1)
+      (let ((seq `(,(car args) ,(cadr args))))
+        (setq result (cons seq result)
+              args (cddr args))))
+    (nreverse result)))
+
 
 (provide 'defkey)
 ;;; defkey.el ends here

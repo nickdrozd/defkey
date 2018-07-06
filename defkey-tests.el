@@ -28,6 +28,20 @@
 
 ;; Integration Tests
 
+;; defkey
+
+(ert-deftest defkey--test-integration-defkey-simple ()
+  (let ((test--map (make-sparse-keymap)))
+    (defkey C-a test--func test--map)
+    (should
+     (equal
+      (lookup-key test--map (kbd "C-a"))
+      'test--func))
+    (should
+     (equal
+      (where-is-internal 'test--func test--map)
+      `([,(string-to-char (kbd "C-a"))])))))
+
 ;; Unit Tests
 
 (defmacro defkey--should-expand-to (input expected)

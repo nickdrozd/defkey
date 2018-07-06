@@ -45,7 +45,11 @@
     (where-is-internal def `(,keymap))
     `(,(vconcat
         (mapcar
-         (lambda (c) (string-to-char (kbd c)))
+         (lambda (c)
+           (let ((k (kbd c)))
+             (if (arrayp k)
+                 (aref k 0)
+               (string-to-char k))))
          (split-string key)))))))
 
 (defun defkey--verify-binding (keymap key def)

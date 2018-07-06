@@ -26,6 +26,10 @@
 (require 'ert)
 (require 'defkey)
 
+;; Integration Tests
+
+;; Unit Tests
+
 (defmacro defkey--should-expand-to (input expected)
   "Assert that INPUT expands into EXPECTED."
   (declare (indent 1))
@@ -33,33 +37,33 @@
 
 ;; defkey
 
-(ert-deftest defkey--test-defkey-simple ()
+(ert-deftest defkey--test-unit-defkey-simple ()
   (defkey--should-expand-to
       (defkey C-a some-func)
     (define-key global-map (kbd "C-a") (quote some-func))))
 
-(ert-deftest defkey--test-defkey-key-sequence ()
+(ert-deftest defkey--test-unit-defkey-key-sequence ()
   (defkey--should-expand-to
       (defkey (C-a M-b s-c H-d) some-func)
     (define-key global-map (kbd "C-a M-b s-c H-d") (quote some-func))))
 
-(ert-deftest defkey--test-defkey-nil ()
+(ert-deftest defkey--test-unit-defkey-nil ()
   (defkey--should-expand-to
       (defkey H-q nil)
     (define-key global-map (kbd "H-q") 'nil)))
 
-(ert-deftest defkey--test-defkey-lambda ()
+(ert-deftest defkey--test-unit-defkey-lambda ()
   (defkey--should-expand-to
       (defkey s-p (func-with-arg -1))
     (define-key global-map (kbd "s-p")
       (lambda nil (interactive) (func-with-arg -1)))))
 
-(ert-deftest defkey--test-defkey-map ()
+(ert-deftest defkey--test-unit-defkey-map ()
   (defkey--should-expand-to
       (defkey M-^ some-func some-map)
     (define-key some-map (kbd "M-^") 'some-func)))
 
-(ert-deftest defkey--test-defkey-complex ()
+(ert-deftest defkey--test-unit-defkey-complex ()
   (defkey--should-expand-to
       (defkey (H-z s-y M-x C-w) (some-func 0 1 -1 t nil) some-map)
     (define-key some-map (kbd "H-z s-y M-x C-w")
@@ -67,7 +71,7 @@
 
 ;; defkeys-in-map
 
-(ert-deftest defkey--test-defkeys-in-map-simple ()
+(ert-deftest defkey--test-unit-defkeys-in-map-simple ()
   (defkey--should-expand-to
       (defkeys-in-map whatever-map
         C-a whatever-func-1
@@ -76,7 +80,7 @@
       (defkey C-a whatever-func-1 whatever-map)
       (defkey M-b whatever-func-2 whatever-map))))
 
-(ert-deftest defkey--test-defkeys-in-map-dangler ()
+(ert-deftest defkey--test-unit-defkeys-in-map-dangler ()
   (defkey--should-expand-to
       (defkeys-in-map some-map
         H-g some-func
@@ -86,7 +90,7 @@
       (defkey H-g some-func some-map)
       (defkey H-t some-other-func some-map))))
 
-(ert-deftest defkey--test-defkeys-in-map-complex ()
+(ert-deftest defkey--test-unit-defkeys-in-map-complex ()
   (defkey--should-expand-to
       (defkeys-in-map global-map
         (C-z M-y) (a-function with args)
@@ -100,7 +104,7 @@
 
 ;; defkeys
 
-(ert-deftest defkey--test-defkeys-simple ()
+(ert-deftest defkey--test-unit-defkeys-simple ()
   (defkey--should-expand-to
       (defkeys
         C-p p-func
@@ -109,7 +113,7 @@
       C-p p-func
       C-g g-func)))
 
-(ert-deftest defkey--test-defkeys-complex ()
+(ert-deftest defkey--test-unit-defkeys-complex ()
   (defkey--should-expand-to
       (defkeys
         (C-a C-a C-a) function-a
@@ -122,7 +126,7 @@
 
 ;; helpers
 
-(ert-deftest defkey--test-partition-pairs ()
+(ert-deftest defkey--test-unit-partition-pairs ()
   (should (equal (defkey--partition-pairs '(a 1 b 2 c 3)) '((a 1) (b 2) (c 3))))
   (should (equal (defkey--partition-pairs '(a 1 b 2 c 3 d)) '((a 1) (b 2) (c 3)))))
 

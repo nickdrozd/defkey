@@ -28,8 +28,30 @@
 ;;; Code:
 
 (defmacro defkey (key def &optional keymap)
-  "Assign DEF to KEY in KEYMAP.
-KEYMAP defaults to `global-map'."
+  "Bind DEF to KEY in KEYMAP (defaults to `global-map').
+
+KEY can be a symbol or a list of symbols, with a symbol being
+interpreted as a key and a list being interpreted as a list of
+keys.
+
+EXAMPLE:
+
+  (defkey (C-x C-b) ibuffer)
+    =>
+      (define-key global-map (kbd \"C-x C-b\") (quote ibuffer))
+
+DEF can be a symbol or a list. A list will be interpreted as an
+interactive lambda of no arguments whose body is DEF.
+
+EXAMPLE:
+
+  (defkey H-m (switch-to-buffer \"*Messages*\"))
+    =>
+      (define-key global-map (kbd \"H-m\")
+        (lambda nil (interactive) (switch-to-buffer \"*Messages*\")))
+
+KEYMAP must be a symbol. If none is supplied, `global-map' will
+be used."
   (let ((key-string
          (if (symbolp key)
              (symbol-name `,key)
@@ -43,14 +65,29 @@ KEYMAP defaults to `global-map'."
        (t `(lambda () (interactive) ,def))))))
 
 (defmacro defkeys-in-map (keymap &rest key-defs)
-  "Bind def to key in KEYMAP for each key-def pair in KEY-DEFS."
+  "Bind def to key in KEYMAP for each key-def pair in KEY-DEFS.
+
+EXAMPLE:
+
+  (defkeys-in-map org-mode-map
+    C-v org-yank
+    C-y backward-kill-word)"
   (let* ((pairs (defkey--partition-pairs key-defs))
          (statements (mapcar (lambda (pair) `(defkey ,@pair ,keymap))
                              pairs)))
     `(progn ,@statements)))
 
 (defmacro defkeys (&rest key-defs)
-  "Bind def to key in `global-map' for each key-def pair in KEY-DEFS."
+  "Bind def to key in `global-map' for each key-def pair in KEY-DEFS.
+
+Equivalent to (defkeys-in-map global map ,@key-defs).
+
+EXAMPLE:
+
+  (defkeys
+    (C-x C-x) execute-extended-command
+    s-f other-window
+    s-b (other-window -1))"
   `(defkeys-in-map global-map ,@key-defs))
 
 ;; helpers

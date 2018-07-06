@@ -65,6 +65,39 @@
     (define-key some-map (kbd "H-z s-y M-x C-w")
       (lambda nil (interactive) (some-func 0 1 -1 t nil)))))
 
+;; defkeys-in-map
+
+(ert-deftest defkey--test-defkeys-in-map-simple ()
+  (defkey--should-expand-to
+      (defkeys-in-map whatever-map
+        C-a whatever-func-1
+        M-b whatever-func-2)
+    (progn
+      (defkey C-a whatever-func-1 whatever-map)
+      (defkey M-b whatever-func-2 whatever-map))))
+
+(ert-deftest defkey--test-defkeys-in-map-dangler ()
+  (defkey--should-expand-to
+      (defkeys-in-map some-map
+        H-g some-func
+        H-t some-other-func
+        H-v)
+    (progn
+      (defkey H-g some-func some-map)
+      (defkey H-t some-other-func some-map))))
+
+(ert-deftest defkey--test-defkeys-in-map-complex ()
+  (defkey--should-expand-to
+      (defkeys-in-map global-map
+        (C-z M-y) (a-function with args)
+        H-x another-function
+        s-w nil
+        dangler)
+    (progn
+      (defkey (C-z M-y) (a-function with args) global-map)
+      (defkey H-x another-function global-map)
+      (defkey s-w nil global-map))))
+
 ;; helpers
 
 (ert-deftest defkey--test-partition-pairs ()

@@ -39,6 +39,13 @@ KEYMAP defaults to `global-map'."
        ((null def) nil)
        (t `(lambda () (interactive) ,def))))))
 
+(defmacro defkeys-in-map (keymap &rest key-defs)
+  "Bind def to key in KEYMAP for each key-def pair in KEY-DEFS."
+  (let* ((pairs (defkey--partition-pairs key-defs))
+         (statements (mapcar (lambda (pair) `(defkey ,@pair ,keymap))
+                             pairs)))
+    `(progn ,@statements)))
+
 ;; helpers
 
 (defun defkey--partition-pairs (args)

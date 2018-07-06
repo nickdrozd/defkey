@@ -98,6 +98,28 @@
       (defkey H-x another-function global-map)
       (defkey s-w nil global-map))))
 
+;; defkeys
+
+(ert-deftest defkey--test-defkeys-simple ()
+  (defkey--should-expand-to
+      (defkeys
+        C-p p-func
+        C-g g-func)
+    (defkeys-in-map global-map
+      C-p p-func
+      C-g g-func)))
+
+(ert-deftest defkey--test-defkeys-complex ()
+  (defkey--should-expand-to
+      (defkeys
+        (C-a C-a C-a) function-a
+        (M-b M-b) function-b
+        (H-c H-c))
+    (defkeys-in-map global-map
+      (C-a C-a C-a) function-a
+      (M-b M-b) function-b
+      (H-c H-c))))
+
 ;; helpers
 
 (ert-deftest defkey--test-partition-pairs ()

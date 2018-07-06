@@ -46,6 +46,10 @@ KEYMAP defaults to `global-map'."
                              pairs)))
     `(progn ,@statements)))
 
+(defmacro defkeys (&rest key-defs)
+  "Bind def to key in `global-map' for each key-def pair in KEY-DEFS."
+  `(defkeys-in-map global-map ,@key-defs))
+
 ;; helpers
 
 (defun defkey--partition-pairs (args)

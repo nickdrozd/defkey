@@ -19,7 +19,10 @@
 
 ;;; Commentary:
 
-;;
+;; Here, "integration test" means a test in which defkey code is
+;; actually executed to modify a real keymap. "Unit tests" include
+;; tests which verify that defkey macros expand correctly as well as
+;; tests for helper functions.
 
 ;;; Code:
 

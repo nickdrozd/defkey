@@ -91,6 +91,25 @@
     (defkey C-w nil test--map)
     (defkey--should-unbound test--map "C-w")))
 
+;; defkeys
+
+(ert-deftest defkey--test-integration-defkeys ()
+  (defkey--with-keymap global-map
+    (defkeys
+      (C-x C-b) ibuffer
+      M-y kill-line
+      s-l linum-mode
+      H-m (switch-to-buffer "*Messages*")
+      C-w nil
+      )
+    (defkey--verify-binding global-map "C-x C-b" 'ibuffer)
+    (defkey--verify-binding global-map "M-y" 'kill-line)
+    (defkey--verify-binding global-map "s-l" 'linum-mode)
+    (defkey--should-lookup global-map "H-m"
+      (lambda () (interactive) (switch-to-buffer "*Messages*")))
+    (defkey--should-unbound global-map "C-w")
+    ))
+
 ;; Unit Tests
 
 (defmacro defkey--should-expand-to (input expected)

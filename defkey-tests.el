@@ -28,19 +28,37 @@
 
 ;; Integration Tests
 
+(defmacro defkey--with-keymap (name &rest body)
+  "Execute BODY with a sparse keymap called NAME."
+  (declare (indent 1))
+  `(let ((,name (make-sparse-keymap)))
+     ,@body))
+
+(defun defkey--should-lookup (keymap key def)
+  "Assert that KEY looks-up to DEF in KEYMAP."
+  (should (equal def (lookup-key keymap (kbd key)))))
+
+(defun defkey--should-where-is (keymap key def)
+  "Assert that DEF where-is's to KEY in KEYMAP."
+  (should
+   (equal
+    (where-is-internal def `(,keymap))
+    `(,(vconcat
+        (mapcar
+         (lambda (c) (string-to-char (kbd c)))
+         (split-string key)))))))
+
+(defun defkey--verify-binding (keymap key def)
+  "Verify that KEY and DEF are bound in KEYMAP."
+  (defkey--should-lookup keymap key def)
+  (defkey--should-where-is keymap key def))
+
 ;; defkey
 
 (ert-deftest defkey--test-integration-defkey-simple ()
-  (let ((test--map (make-sparse-keymap)))
+  (defkey--with-keymap test--map
     (defkey C-a test--func test--map)
-    (should
-     (equal
-      (lookup-key test--map (kbd "C-a"))
-      'test--func))
-    (should
-     (equal
-      (where-is-internal 'test--func test--map)
-      `([,(string-to-char (kbd "C-a"))])))))
+    (defkey--verify-binding test--map "C-a" 'test--func)))
 
 ;; Unit Tests
 

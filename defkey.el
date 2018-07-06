@@ -20,7 +20,10 @@
 
 ;;; Commentary:
 
+;; defkey is an attempt to smooth over some of the annoyances and
+;; irregularities involved in setting Emacs key bindings.
 ;;
+;; https://github.com/nickdrozd/defkey
 
 ;;; Code:
 

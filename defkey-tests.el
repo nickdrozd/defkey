@@ -60,6 +60,22 @@
     (defkey C-a test--func test--map)
     (defkey--verify-binding test--map "C-a" 'test--func)))
 
+(ert-deftest defkey--test-integration-defkey-global ()
+  (defkey--with-keymap global-map
+    (defkey C-a move-end-of-line)
+    (defkey--verify-binding global-map "C-a" 'move-end-of-line)))
+
+(ert-deftest defkey--test-integration-defkey-lambda ()
+  (defkey--with-keymap test--map
+    (defkey H-y (message "hieeeee") test--map)
+    (defkey--should-lookup test--map "H-y"
+      (lambda () (interactive) (message "hieeeee")))))
+
+(ert-deftest defkey--test-integration-defkey-key-sequence ()
+  (defkey--with-keymap test--map
+    (defkey (C-b d) lol test--map)
+    (defkey--verify-binding test--map "C-b d" 'lol)))
+
 ;; Unit Tests
 
 (defmacro defkey--should-expand-to (input expected)

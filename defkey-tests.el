@@ -53,6 +53,10 @@
   (defkey--should-lookup keymap key def)
   (defkey--should-where-is keymap key def))
 
+(defun defkey--should-unbound (keymap key)
+  "Assert that KEY is not bound in KEYMAP."
+  (should (null (lookup-key keymap (kbd key)))))
+
 ;; defkey
 
 (ert-deftest defkey--test-integration-defkey-simple ()
@@ -75,6 +79,13 @@
   (defkey--with-keymap test--map
     (defkey (C-b d) lol test--map)
     (defkey--verify-binding test--map "C-b d" 'lol)))
+
+(ert-deftest defkey--test-integration-defkey-nil ()
+  (defkey--with-keymap test--map
+    (defkey C-w some-func test--map)
+    (defkey--verify-binding test--map "C-w" 'some-func)
+    (defkey C-w nil test--map)
+    (defkey--should-unbound test--map "C-w")))
 
 ;; Unit Tests
 

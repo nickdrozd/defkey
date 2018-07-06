@@ -110,6 +110,25 @@
     (defkey--should-unbound global-map "C-w")
     ))
 
+;; defkeys-in-map
+
+(ert-deftest defkey--test-integration-defkeys-in-map ()
+  (defkey--with-keymap test--map
+    (defkeys-in-map test--map
+      (C-g j) test--func-1
+      M-f test--func-2
+      (s-t d) test--func-3
+      H-h (test--func-4 'with 'args)
+      C-c nil
+      )
+    (defkey--verify-binding test--map "C-g j" 'test--func-1)
+    (defkey--verify-binding test--map "M-f" 'test--func-2)
+    (defkey--verify-binding test--map "s-t d" 'test--func-3)
+    (defkey--should-lookup test--map "H-h"
+      (lambda () (interactive) (test--func-4 'with 'args)))
+    (defkey--should-unbound test--map "C-c")
+    ))
+
 ;; Unit Tests
 
 (defmacro defkey--should-expand-to (input expected)

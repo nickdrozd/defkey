@@ -173,6 +173,26 @@
     (define-key some-map (kbd "H-z s-y M-x C-w")
       (lambda nil (interactive) (some-func 0 1 -1 t nil)))))
 
+(ert-deftest defkey--test-unit-defkey-backslash ()
+  (defkey--should-expand-to
+      (defkey C-\( open-paren)
+    (define-key global-map (kbd "C-(") 'open-paren))
+  (defkey--should-expand-to
+      (defkey C-\] close-bracket)
+    (define-key global-map (kbd "C-]") 'close-bracket))
+  (defkey--should-expand-to
+      (defkey C-\; semicolon)
+    (define-key global-map (kbd "C-;") 'semicolon))
+  (defkey--should-expand-to
+      (defkey C-\, comma)
+    (define-key global-map (kbd "C-,") 'comma))
+  (defkey--should-expand-to
+      (defkey C-\# octothorp)
+    (define-key global-map (kbd "C-#") 'octothorp))
+  (defkey--should-expand-to
+      (defkey C-\\ backslash)
+    (define-key global-map (kbd "C-\\") 'backslash)))
+
 ;; defkeys-in-map
 
 (ert-deftest defkey--test-unit-defkeys-in-map-simple ()

@@ -3,6 +3,9 @@
 ;; Copyright (C) 2018  Nick Drozd
 
 ;; Author: Nick Drozd <nicholasdrozd@gmail.com>
+;; URL: https://github.com/nickdrozd/defkey
+;; Version: 0.1
+;; Package-Requires: ((emacs "24"))
 ;; Keywords: abbrev, lisp
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -22,8 +25,6 @@
 
 ;; defkey is an attempt to smooth over some of the annoyances and
 ;; irregularities involved in setting Emacs key bindings.
-;;
-;; https://github.com/nickdrozd/defkey
 
 ;;; Code:
 

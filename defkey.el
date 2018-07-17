@@ -1,4 +1,4 @@
-;;; defkey.el --- something something keybindings    -*- lexical-binding: t; -*-
+;;; defkey.el --- Clean Emacs key bindings    -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2018  Nick Drozd
 
